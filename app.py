@@ -3,9 +3,11 @@ import sys
 import sqlite3
 import threading
 from queue import Queue
+from datetime import date
 
 import pandas as pd
 from tkinter import *
+from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -432,7 +434,7 @@ class Point2Bot:
         scroll_y.pack(fill="y", side=RIGHT)
 
         logs_textbox = Text(logs_frame, wrap=WORD, bg="#f2f2f2", yscrollcommand=scroll_y.set, borderwidth=0, highlightthickness=0)
-        logs_textbox.place(relheight=0.88, relwidth=0.96, relx=0.1, rely=0.02)
+        logs_textbox.place(relheight=0.88, relwidth=0.96, relx=0.05, rely=0.02)
 
         conn = sqlite3.connect("./data/agents.db")
 
@@ -480,7 +482,8 @@ class Point2Bot:
                               font=("Verdana", 15), 
                               bg="#b41e25", 
                               borderwidth=0, 
-                              foreground="white")
+                              foreground="white", 
+                              command=self.__export)
         export_button.place(relx=0.52, rely=0.926, relwidth=0.2, relheight=0.05)
 
         delete_button = Button(logs_frame, 
@@ -488,8 +491,25 @@ class Point2Bot:
                               font=("Verdana", 15), 
                               bg="#b41e25", 
                               borderwidth=0, 
-                              foreground="white")
+                              foreground="white",
+                              command=self.__delete)
         delete_button.place(relx=0.726, rely=0.926, relwidth=0.2, relheight=0.05)
+    
+    def __export(self) -> None:
+        """Exports data to csv"""
+        directory = filedialog.askdirectory(initialdir="/", title="Choose a folder")
+
+        conn = sqlite3.connect("./data/agents.db")
+
+        df = pd.read_sql_query("SELECT * FROM agents", con=conn)
+
+        conn.close()
+
+        df.to_excel(f"{directory}/point2agent_data_{date.today()}.xlsx", index=False)
+    
+    def __delete(self) -> None:
+        """Deletes the data collected"""
+        self.sql.delete_agents()
     
     def __start(self) -> None:
         """starts scraping and contacting agents"""
