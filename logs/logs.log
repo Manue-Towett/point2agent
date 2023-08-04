@@ -1,63 +1,550 @@
-SQLHandler:INFO - Checking if table <agents> exists...
-AgentsScraper:INFO - Agent links extracted: 10
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Lesley-Martinson/3442577.html
-AgentsScraper:INFSQLHandler:INFO - Adding new agent to database
+AgentsScraper:INFO - *****Point2Agent Bot Started*****
+AgentsScraper:INFO - Agent links extracted: 0
+AgentsScraper:INFO - Agent links extracted: 0
+AgentsScraper:INFO - Agent links extracted: 0
+AgentsScraperSQLHandler:INFO - Adding new agent to database
 SQLHandler:INFO - Record added successfully
 SQLHandler:INFO - Adding new agent to database
 SQLHandler:INFO - Record added successfully
-O - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Giovanni-Abatti/523184.html
-AgentsScraper:INFO - Agent links extracted: 30
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Rob-Kinnon/522458.html
-AgentsScraper:INFO - Agent links extracted: 40
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Jim-McKinnon-BA-CFP/5184579.html
-AgentsScraper:INFO - Agent links extracted: 50
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Ron-Aury-/4168595.html
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Carlos-Betancourt/518985.html
-AgentsScraper:INFO - Agent links extracted: 60
-AgentsScraper:INFO - Agent links extracted: 70
-AgentsScraper:INFO - Solving recaptcha for agent >> Carlos Betancourt
-AgentsScraper:INFO - Agent links extracted: 80
-AgentsScraper:INFO - Agent links extracted: 90
-AgentsScraper:INFO - Agent links extracted: 100
-AgentsScraper:INFO - Agent links extracted: 110
-AgentsScraper:INFO - Agent links extracted: 120
-AgentsScraper:INFO - Agent links extracted: 130
-AgentsScraper:INFO - Agent links extracted: 140
-AgentsScraper:INFO - Agent links extracted: 150
-AgentsScraper:INFO - Agent links extracted: 160
-AgentsScraper:INFO - Agent links extracted: 170
-AgentsScraper:INFO - Agent links extracted: 180
-AgentsScraper:INFO - Agent links extracted: 190
-AgentsScraper:INFO - Agent links extracted: 200
-AgentsScraper:INFO - Agent links extracted: 210
-AgentsScraper:INFO - Agent links extracted: 220
-AgentsScraper:INFO - Agent links extracted: 230
-AgentsScraper:INFO - Agent links extracted: 240
-AgentsScraper:INFO - Agent links extracted: 250
-AgentsScraper:INFO - Agent links extracted: 260
-AgentsScraper:INFO - Agent links extracted: 270
-AgentsScraper:INFO - Agent links extracted: 280
-AgentsScraper:INFO - Agent links extracted: 290
-AgentsScraper:INFO - Agent links extracted: 300
-AgentsScraper:INFO - Agent links extracted: 310
-AgentsScraper:INFO - Agent links extracted: 320
-AgentsScraper:INFO - Contacting agent >> Carlos Betancourt
-AgentsScraper:INFO - Agent links extracted: 330
-AgentsScraper:INFO - Getting agent details from https://www.point2homes.com/MX/Real-Estate-Agents/Irka-Davis/3405255.html
-AgentsScraper:INFO - Agent links extracted: 340
-AgentsScraper:INFO - Solving recaptcha for agent >> Irka Davis
-AgentsScraper:INFO - Agent links extracted: 350
-AgentsScraper:INFO - Agent links extracted: 360
-AgentsScraper:INFO - Agent links extracted: 370
-AgentsScraper:INFO - Agent links extracted: 380
-AgentsScraper:INFO - Agent links extracted: 390
-AgentsScraper:INFO - Agent links extracted: 400
-AgentsScraper:INFO - Agent links extracted: 410
-AgentsScraper:INFO - Agent links extracted: 420
-AgentsScraper:INFO - Agent links extracted: 430
-AgentsScraper:INFO - Agent links extracted: 440
-AgentsScraper:INFO - Agent links extracted: 450
-AgentsScraper:INFO - Agent links extracted: 460
-AgentsScraper:INFO - Agent links extracted: 470
-AgentsScraper:INFO - Agent links extracted: 480
-AgentsScraper:INFO - Agent links extracted: 490
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+SQLHandler:INFO - Adding new agent to database
+ent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('4972316', 'Fernando Escamilla', 'GUARDIANES MAYAS, CENTRAL PARK LAGUNAS, LOCAL 1, Tulum, QR 77760', 'https://www.point2homes.com/MX/Real-Estate-Agents/Fernando-Escamilla/4972316.html', 'http://danielcortes.point2agent.com', None, '+52 (999) 258-7731', None, None, None, 'HIGHLINE MEXICO', '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+AgentsScraper:ERROR - 
+Traceback (most recent call last):
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.IntegrityError: UNIQUE constraint failed: agents.agent_id
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\Towett\Desktop\point2agent\app\main.py", line 270, in __process_agent
+    self.sql_handler.run(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 162, in run
+    self.add_agent(agent)
+  File "c:\Users\Towett\Desktop\point2agent\utils\sql_handler.py", line 72, in add_agent
+    connection.execute(self.table.insert().values(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\sql\elements.py", line 483, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Towett\Desktop\point2agent\env\Lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: agents.agent_id
+[SQL: INSERT INTO agents (agent_id, name, location, agent_url, website, phone, office_phone, fax_phone, linkedin, facebook, description, date_scraped, contacted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('2781524', 'Liszett Torres', '5th Avenue & 34th Street, Bosque de los Aluxes, Playa del Carmen, QR 77710', 'https://www.point2homes.com/MX/Real-Estate-Agents/Liszett-Torres/2781524.html', 'http://veronicasaucedo2.point2agent.com', '(198) 411-64666', None, None, None, 'https://www.facebook.com/SIRMEXICO', "RIVIERA MAYA SOTHEBY'S INTERNATIONAL REALTY", '2023-08-04 00:00:00.000000', 0)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)

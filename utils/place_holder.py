@@ -13,7 +13,9 @@ class PlaceHolder(Entry):
         self['relief'] = relief
         self['bg'] = bg
 
-        self['bd'] = 5
+        self['bd'] = 15
+
+        self["highlightthickness"] = 0
 
         self.placeholder = placeholder
 

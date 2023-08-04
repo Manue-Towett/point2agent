@@ -1,6 +1,7 @@
 import io
 import sys
 import threading
+from queue import Queue
 from typing import Optional
 from datetime import date, datetime
 from subprocess import CREATE_NO_WINDOW
@@ -12,26 +13,37 @@ from PIL import Image, ImageTk
 
 from utils import PlaceHolder, SQLHandler
 
+CLOSE_EVENT = threading.Event()
+
+QUEUE_MESSAGE = Queue()
+
+QUEUE_BAR = Queue()
+
+QUEUE_FLAGGED = Queue()
+
+QUEUE_PAGE = Queue()
+
 HEIGHT, WIDTH = 650, 800
+
 USER = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
 
 class GoogleFlagger:
-    def __init__(self, license: str, uid: str) -> None:
+    def __init__(self, license: str = "", uid: str = "") -> None:
         self.window = Tk()
         self.browser = None
         self.window.state("zoomed")
         self.flagger_running = False
         self.close_event = threading.Event()
 
-        self._license = license
-        self.uid = uid
+        # self._license = license
+        # self.uid = uid
 
-        self.buffer = io.StringIO()
-        sys.stdout = self.buffer
-        sys.stderr = self.buffer
+        # self.buffer = io.StringIO()
+        # sys.stdout = self.buffer
+        # sys.stderr = self.buffer
 
-        self.window.iconbitmap("./G.ico")
-        self.window.title("Google Business Profile Flagger")
+        # self.window.iconbitmap("./G.ico")
+        # self.window.title("Google Business Profile Flagger")
 
         self.window.minsize(WIDTH, HEIGHT)
         self.window.protocol("WM_DELETE_WINDOW", self.end_session)
@@ -79,7 +91,7 @@ class GoogleFlagger:
         title_frame = Frame(self.canvas, bg="#0057ff")
         title_frame.place(relwidth=1, relheight=0.22)
 
-        self.img = ImageTk.PhotoImage(Image.open("./logo.jpg"))
+        # self.img = ImageTk.PhotoImage(Image.open("./logo.jpg"))
 
         def resize_title(e):
             font_size = e.width/28
@@ -93,8 +105,8 @@ class GoogleFlagger:
         title_label.place(relheight=1, relwidth=0.55, relx=0.45)
         title_label.bind("<Configure>", resize_title)
 
-        logo = Label(title_frame, bg="#0057ff", image=self.img)
-        logo.place(relx=0.02, relheight=1)
+        # logo = Label(title_frame, bg="#0057ff", image=self.img)
+        # logo.place(relx=0.02, relheight=1)
     
     def frame_setup(self, border_args:dict, frame_args:dict={}) -> Frame:
         """
@@ -260,7 +272,7 @@ class GoogleFlagger:
                               bg="#b41e25", 
                               borderwidth=0, 
                               foreground="white", 
-                              command=self.check_license)
+                              command=self.click)
         start_button.place(relx=0.32, rely=0.62,relwidth=0.58, relheight=0.07)
 
         def resize_remember(e):
@@ -647,24 +659,24 @@ class GoogleFlagger:
                         while self.browser is None:
                             pass
 
-                        if sort_method - 1 !=  3:
-                            ReviewFlagger(self.browser, sort_method, reason, 
-                                            {
-                                                "user": user, 
-                                                "password": passw
-                                            }, 
-                                            no_comment_decision, self.close_event, str_date, int_reviews, total,
-                                            self.__create_progress_bar)
+                        # if sort_method - 1 !=  3:
+                        #     ReviewFlagger(self.browser, sort_method, reason, 
+                        #                     {
+                        #                         "user": user, 
+                        #                         "password": passw
+                        #                     }, 
+                        #                     no_comment_decision, self.close_event, str_date, int_reviews, total,
+                        #                     self.__create_progress_bar)
 
-                        elif sort_method == 4:
-                            CompanyFlagger(self.browser, reason, 
-                                            {
-                                                "user": user, 
-                                                "password": passw
-                                            }, 
-                                            company,
-                                            no_comment_decision, self.close_event, str_date, int_reviews, total,
-                                            self.__create_progress_bar)
+                        # elif sort_method == 4:
+                        #     CompanyFlagger(self.browser, reason, 
+                        #                     {
+                        #                         "user": user, 
+                        #                         "password": passw
+                        #                     }, 
+                        #                     company,
+                        #                     no_comment_decision, self.close_event, str_date, int_reviews, total,
+                        #                     self.__create_progress_bar)
                 
                 thread = threading.Thread(target=start_flagger, daemon=True)
                 thread.start()
@@ -751,9 +763,9 @@ class GoogleFlagger:
         total_reviews = 0
 
         for (key, str_date), value in zip(data_dict.items(), num_reviews):
-            table = SQLHandler(key)
+            # table = SQLHandler(key)
 
-            table.fetch_reviews(str_date, value)
+            # table.fetch_reviews(str_date, value)
 
             total_reviews += value.get()
 
@@ -914,11 +926,14 @@ class GoogleFlagger:
 
     def run(self) -> None:
         """Entry point for the GUI"""
-        thread = threading.Thread(target=self.__create_browser, daemon=True)
-        thread.start()
-        thread.join()
+        # thread = threading.Thread(target=self.__create_browser, daemon=True)
+        # thread.start()
+        # thread.join()
 
         self.login_setup()
         self.left_frame_setup()
         self.logger_frame_setup()
         self.window.mainloop()
+
+app = GoogleFlagger()
+app.run()
