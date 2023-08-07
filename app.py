@@ -1,16 +1,10 @@
-import io
-import sys
 import sqlite3
 import threading
 from queue import Queue
-from datetime import date
 
 import pandas as pd
 from tkinter import *
 from tkinter import filedialog
-from tkinter import ttk
-from tkinter import messagebox
-from PIL import Image, ImageTk
 
 from app import AgentsScraper
 from utils import PlaceHolder, SQLHandler, User
@@ -24,6 +18,7 @@ class Point2Bot:
     def __init__(self) -> None:
         self.window = Tk()
         self.window.state("zoomed")
+        self.window.iconbitmap("./p2c.ico")
         self.window.title("Point2Agent Contact Bot")
 
         self.window.minsize(WIDTH, HEIGHT)
