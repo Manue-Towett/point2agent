@@ -242,8 +242,13 @@ class Point2Bot:
                             command=self.__select_email)
         emails_btn.place(relx=0.21, rely=0.347, relheight=0.05, relwidth=0.3)
 
-        emails_label = Label(self.center_canvas, text="emails.txt", bg="white", font="Verdana 12", anchor=W)
+        def resize_emails(e):
+            label_size = e.width/23
+            label.config(font=("Verdana", int(label_size)))
+
+        emails_label = Label(self.center_canvas, text="", bg="white", font="Verdana 12", anchor=W)
         emails_label.place(relx=0.52, rely=0.345, relheight=0.05, relwidth=0.41)
+        emails_label.bind("<Configure>", resize_emails)
         
         subject = self.input_fields_setup(
                     self.center_canvas, {
@@ -266,7 +271,7 @@ class Point2Bot:
                 )
         
         def resize(e):
-            label_size = e.width/18
+            label_size = e.width/23
             label.config(font=("Verdana", int(label_size)))
 
         label = Label(self.center_canvas, text="Message:", bg="white", font=("Verdana", 18))
@@ -466,7 +471,10 @@ class Point2Bot:
     
     def __export(self) -> None:
         """Exports data to csv"""
-        directory = filedialog.askdirectory(initialdir="/", title="Choose a folder")
+        directory = filedialog.asksaveasfilename(defaultextension="xlsx", 
+                                                 initialdir="/",
+                                                 title="Save as",
+                                                 filetypes=[("Excel", "*.xlsx")])
 
         conn = sqlite3.connect("./data/agents.db")
 
@@ -474,7 +482,7 @@ class Point2Bot:
 
         conn.close()
 
-        df.to_excel(f"{directory}/point2agent_data_{date.today()}.xlsx", index=False)
+        df.to_excel(directory, index=False)
     
     def __delete(self) -> None:
         """Deletes the data collected"""

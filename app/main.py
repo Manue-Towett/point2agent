@@ -122,8 +122,7 @@ class AgentsScraper:
             self.home_queue.join()
         
         for url, email in zip(agent_profiles, itertools.cycle(self.emails)):
-            if not url in self.queued:
-                print(email)
+            if not url in self.queued and not (self.base_url + url) in self.agents_contacted:
                 self.queue.put((url, email))
 
                 self.queued.append(url)
@@ -176,12 +175,13 @@ class AgentsScraper:
         
         return details, form
     
-    def __submit_message(self, url: str, 
-                         details: dict[str, str|int],
-                         headers: dict[str, str]) -> None:
+    def __submit_message(self, url: str, details: dict[str, str|int], headers: dict[str, str]) -> None:
         """Submits a message to a given agent"""
         while True:
             try:
+                if url in self.agents_contacted:
+                    return None
+                
                 response = self.session.post(url, params=details, headers=headers, proxies=PROXIES, verify=False)
 
                 if response.ok:
@@ -189,7 +189,7 @@ class AgentsScraper:
 
                     return response.json()
                 
-                return {"StatusMessage": "Your inquiry has been sent!"}
+                return None
                 
             except:self.logger.error("")
     
@@ -259,7 +259,9 @@ class AgentsScraper:
                     agent["agent_url"] = url
 
                     if agent["agent_url"] in self.agents_contacted:
-                        return agent
+                        return None
+                    
+                    self.agents_contacted.append(agent["agent_url"])
                     
                     agent_lst = [agent]
                     
@@ -310,14 +312,24 @@ class AgentsScraper:
                     
                     response = self.__submit_message(post_url, details, headers)
 
+                    if not response:
+                        return None
+
                     if response["StatusMessage"] == "Your inquiry has been sent!":
                         self.agents_no += 1
 
-                        self.agents_var.set(self.agents_no)
-
-                        self.agents_contacted.append(agent["agent_url"])
+                        self.agents_var.set(self.agents_no)                        
 
                         return agent
+                    
+                    elif response['StatusMessage'].startswith("We like to avoid spam"):
+                        if details["FromEmail"] in self.emails:
+                            self.emails.remove(details["FromEmail"])
+                        
+                        if not len(self.emails):
+                            return None
+                        
+                        details["FromEmail"] = random.choice(self.emails)
                     
             except:self.logger.error("")
     
@@ -340,7 +352,7 @@ class AgentsScraper:
 
         self.agents_no = 0
 
-        while not self.close_event.is_set():
+        while not self.close_event.is_set() and len(self.emails):
             agent_url, email = self.queue.get()
 
             user["FromEmail"] = email.strip()
@@ -411,24 +423,27 @@ class AgentsScraper:
 
         self.queue.join()
 
-        self.state.set("Finished")
+        if len(self.emails):
+            self.state.set("Finished")
 
-        self.logger.info("Done scraping and contacting agents!")
+            self.logger.info("Done scraping and contacting agents!")
+        else:
+            self.state.set("limit reached")
 
 
-if __name__ == "__main__":
-    p2url = "https://www.point2homes.com/MX/Real-Estate-Agents"
+# if __name__ == "__main__":
+#     p2url = "https://www.point2homes.com/MX/Real-Estate-Agents"
 
-    api = "a8dfbfbbfe30610fbf85e74e84a0ed7f"
+#     api = "a8dfbfbbfe30610fbf85e74e84a0ed7f"
 
-    user_d = {
-        "FromFirstName": "Kirui",
-        "FromLastName": "Towett",
-        "FromEmail": "malingukevin23@gmail.com",
-        "FromPhone": "(074) 661-0734",
-        "Subject": "Need the assistance of an agent",
-        "Message": "Hi, I'm following your listings on Point2 and  would appreciate some suggestions related to my searches. Thanks so much!"
-    }
+#     user_d = {
+#         "FromFirstName": "Kirui",
+#         "FromLastName": "Towett",
+#         "FromEmail": "malingukevin23@gmail.com",
+#         "FromPhone": "(074) 661-0734",
+#         "Subject": "Need the assistance of an agent",
+#         "Message": "Hi, I'm following your listings on Point2 and  would appreciate some suggestions related to my searches. Thanks so much!"
+#     }
 
-    agent_scraper = AgentsScraper()
-    agent_scraper.scrape()
+#     agent_scraper = AgentsScraper()
+#     agent_scraper.scrape()
