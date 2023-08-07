@@ -1,5 +1,7 @@
 import re
 import time
+import random
+import itertools
 import threading
 from queue import Queue
 from typing import Optional
@@ -40,7 +42,8 @@ class AgentsScraper:
                  records: IntVar, 
                  state: StringVar, 
                  log: Text,
-                 df: pd.DataFrame, 
+                 df: pd.DataFrame,
+                 emails: list[str], 
                  close_event: threading.Event) -> None:
         self.logger = Logger(__class__.__name__)
         self.logger.info("*****Point2Agent Bot Started*****")
@@ -48,6 +51,7 @@ class AgentsScraper:
         self.df = df
         self.state = state
         self.text_log = log
+        self.emails = emails
         self.links_var = links
         self.agents_var = agents
         self.records_var = records
@@ -117,9 +121,10 @@ class AgentsScraper:
             [self.home_queue.put((home, agent_profiles)) for home in homes]
             self.home_queue.join()
         
-        for url in agent_profiles:
+        for url, email in zip(agent_profiles, itertools.cycle(self.emails)):
             if not url in self.queued:
-                self.queue.put(url)
+                print(email)
+                self.queue.put((url, email))
 
                 self.queued.append(url)
             
@@ -180,7 +185,8 @@ class AgentsScraper:
                 response = self.session.post(url, params=details, headers=headers, proxies=PROXIES, verify=False)
 
                 if response.ok:
-                    print(response.json())
+                    self.logger.info("Agent contacted successfully.")
+
                     return response.json()
                 
                 return {"StatusMessage": "Your inquiry has been sent!"}
@@ -299,6 +305,8 @@ class AgentsScraper:
                                "Content-Type": "x-www-form-urlencoded; charset=UTF-8"}
                     
                     self.logger.info("Contacting agent >> {}".format(agent["name"]))
+
+                    details["FromPhone"] = self.__generate_phone()
                     
                     response = self.__submit_message(post_url, details, headers)
 
@@ -312,6 +320,19 @@ class AgentsScraper:
                         return agent
                     
             except:self.logger.error("")
+    
+    def __generate_phone(self) -> str:
+        """Generates a dummy phone number"""
+        fmt = "({}{}{}) {}{}{}-{}{}{}{}"
+
+        numbers = []
+
+        for _ in range(10):
+            numbers.append(random.randrange(0, 9))
+
+        phone_no = fmt.format(*numbers)
+
+        return phone_no
 
     def __work(self, api_key: str, user: dict[str, str]) -> None:
         """Work to be done by the form submitting thread"""
@@ -320,7 +341,9 @@ class AgentsScraper:
         self.agents_no = 0
 
         while not self.close_event.is_set():
-            agent_url = self.queue.get()
+            agent_url, email = self.queue.get()
+
+            user["FromEmail"] = email.strip()
 
             if not self.base_url + agent_url in self.agents_contacted:
                 agent = self.__process_agent(agent_url, post_url, api_key, user)

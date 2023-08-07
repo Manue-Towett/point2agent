@@ -51,7 +51,7 @@ class Point2Bot:
         Sets up the input fields such as the first name and last name
         """
         def resize(e):
-            label_size = e.width/18
+            label_size = e.width/23
             label.config(font=("Verdana", int(label_size)))
 
         label = Label(frame, text=input_dict["text"], bg="white", font=("Verdana", 18))
@@ -172,7 +172,7 @@ class Point2Bot:
         line = Label(self.center_canvas, bg="#0057ff")
         line.place(relheight=0.005, relwidth=0.98, rely=0.1, relx=0.01)
 
-        global first_name, last_name, email, subject, message, api_key, phone
+        global first_name, last_name, emails_label, subject, message, api_key
 
         first_name = self.input_fields_setup(
                     self.center_canvas, {
@@ -214,9 +214,9 @@ class Point2Bot:
                     True
                 )
         
-        phone = self.input_fields_setup(
+        api_key = self.input_fields_setup(
                     self.center_canvas, {
-                        "text":"Phone No:",
+                        "text":"2captcha Key:",
                         "label": {
                             "relx": 0,
                             "rely": 0.235,
@@ -226,27 +226,7 @@ class Point2Bot:
                         "entry": {
                             "relx": 0.21, 
                             "rely": 0.2447,
-                            "relwidth": 0.28,
-                            "relheight": 0.07
-                        },
-                        "placeholder": "Format > (000) 000-0000"
-                    },
-                    True
-                )
-        
-        api_key = self.input_fields_setup(
-                    self.center_canvas, {
-                        "text":"2captcha Key:",
-                        "label": {
-                            "relx": 0.45,
-                            "rely": 0.235,
-                            "relheight": 0.1,
-                            "relwidth": 0.24
-                        },
-                        "entry": {
-                            "relx": 0.65, 
-                            "rely": 0.2447,
-                            "relwidth": 0.28,
+                            "relwidth": 0.72,
                             "relheight": 0.07
                         },
                         "placeholder": "2captcha API Key"
@@ -254,25 +234,16 @@ class Point2Bot:
                     True
                 )
         
-        email = self.input_fields_setup(
-                    self.center_canvas, {
-                        "text":"Your Email:",
-                        "label": {
-                            "relx": 0,
-                            "rely": 0.335,
-                            "relheight": 0.1,
-                            "relwidth": 0.24
-                        },
-                        "entry": {
-                            "relx": 0.21, 
-                            "rely": 0.3447,
-                            "relwidth": 0.72,
-                            "relheight": 0.07
-                        },
-                        "placeholder": "Your email"
-                    },
-                    True
-                )
+        emails_btn = Button(self.center_canvas, 
+                            text="Select Emails File", 
+                            bg="#b41e25", 
+                            fg="white", 
+                            font="Verdana 12 bold",
+                            command=self.__select_email)
+        emails_btn.place(relx=0.21, rely=0.347, relheight=0.05, relwidth=0.3)
+
+        emails_label = Label(self.center_canvas, text="emails.txt", bg="white", font="Verdana 12", anchor=W)
+        emails_label.place(relx=0.52, rely=0.345, relheight=0.05, relwidth=0.41)
         
         subject = self.input_fields_setup(
                     self.center_canvas, {
@@ -325,6 +296,16 @@ class Point2Bot:
         error_label = Label(self.center_canvas, textvariable=error, bg="white", fg="red", font="Verdana 12")
         error_label.place(relx=0.21, rely=0.88, relheight=0.07, relwidth=0.72)
     
+    def __select_email(self) -> None:
+        """Select emails file"""
+        global emails_file
+
+        emails_file = filedialog.askopenfilename(initialdir="/",
+                                                 title="Choose a file with emails", 
+                                                 filetypes=[("text file", "*.txt")])
+        
+        emails_label.config(text=emails_file.split("/")[-1])
+
     def __save(self) -> None:
         """Saves user information to db"""
         f_name = first_name.get()
@@ -340,18 +321,6 @@ class Point2Bot:
             error.set("Enter your surname!")
 
             return
-        
-        phone_no = phone.get()
-
-        if not phone_no.strip() or phone_no == "Format > (000) 000-0000":
-            error.set("Enter your phone number!")
-
-            return
-
-        if not "("  in phone_no or not ")" in phone_no or not " " in phone_no or not "-" in phone_no:
-            error.set("Please enter phone number in the format > (000) 000-0000") 
-
-            return    
 
         apikey = api_key.get()
 
@@ -360,10 +329,11 @@ class Point2Bot:
 
             return
         
-        email_str = email.get()
-
-        if not email_str.strip() or email_str == "Your email":
-            error.set("Enter your email!")
+        try:
+            with open(emails_file, "r") as file:
+                emails = file.read()
+        except:
+            error.set("Please select a file with emails!")
 
             return
         
@@ -387,9 +357,8 @@ class Point2Bot:
 
         self.user.add_user({"first_name": f_name, 
                             "last_name": l_name,
-                            "email": email_str,
+                            "email": emails,
                             "api_key": apikey,
-                            "phone": phone_no,
                             "subject": subject_str,
                             "message": message_str})
 
@@ -510,6 +479,10 @@ class Point2Bot:
     def __delete(self) -> None:
         """Deletes the data collected"""
         self.sql.delete_agents()
+
+        logs_textbox.delete("1.0", END)
+
+        records.set(0)
     
     def __start(self) -> None:
         """starts scraping and contacting agents"""
@@ -555,15 +528,15 @@ class Point2Bot:
             details = {
                 "FromFirstName": user[1],
                 "FromLastName": user[2], 
-                "FromPhone": user[3],
-                "FromEmail": user[5],
-                "Subject": user[6],
-                "Message": user[7]
+                "FromPhone": "",
+                "FromEmail": "",
+                "Subject": user[5],
+                "Message": user[6]
             }
             
-            api_key = user[4]
+            api_key, emails = user[3], user[4].split("\n")
 
-            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, CLOSE_EVENT)
+            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, emails, CLOSE_EVENT)
 
             threading.Thread(target=agent_scraper.scrape, daemon=True, args=(url, api_key, details)).start()
         

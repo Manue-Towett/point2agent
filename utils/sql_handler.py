@@ -193,7 +193,6 @@ class User:
             Column("id", Integer, primary_key=True),
             Column("first_name", String),
             Column("last_name", String),
-            Column("phone", String),
             Column("api_key", String),
             Column("email", String),
             Column("subject", String),
@@ -212,7 +211,6 @@ class User:
             connection.execute(self.table.insert().values(
                     first_name=data["first_name"],
                     last_name=data["last_name"],
-                    phone=data["phone"],
                     api_key=data["api_key"],
                     email=data["email"],
                     subject=data["subject"],
@@ -235,7 +233,7 @@ class User:
         
         self.logger.info(f"Deleted all users from <{self.table}>")
 
-    def fetch_users(self) -> Optional[list]:
+    def fetch_users(self) -> Optional[list[str]]:
         """Fetches all the users from a given table"""
         self.logger.info(f"Fetching users from table <{self.table}> ...")
 
