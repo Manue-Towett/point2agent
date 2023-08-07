@@ -9,21 +9,21 @@ class Logger:
         self.logger.setLevel(logging.INFO)
 
         s_handler = logging.StreamHandler()
-        f_handler = logging.FileHandler(
-            "./logs/logs.log", mode="w"
-        )
+        # f_handler = logging.FileHandler(
+        #     "./logs/logs.log", mode="w"
+        # )
 
         fmt = logging.Formatter(
             "%(name)s:%(levelname)s - %(message)s")
         
         s_handler.setFormatter(fmt)
-        f_handler.setFormatter(fmt)
+        # f_handler.setFormatter(fmt)
 
         s_handler.setLevel(logging.INFO)
-        f_handler.setLevel(logging.INFO)
+        # f_handler.setLevel(logging.INFO)
 
         self.logger.addHandler(s_handler)
-        self.logger.addHandler(f_handler)
+        # self.logger.addHandler(f_handler)
 
     def info(self, message: str) -> None:
         """Logs an info message"""

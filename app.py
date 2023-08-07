@@ -1,7 +1,11 @@
+import io
+import os
+import sys
 import sqlite3
 import threading
 from queue import Queue
 
+import pyuac
 import pandas as pd
 from tkinter import *
 from tkinter import filedialog
@@ -12,6 +16,10 @@ from utils import PlaceHolder, SQLHandler, User
 CLOSE_EVENT = threading.Event()
 
 HEIGHT, WIDTH = 650, 800
+
+# BUFFER = io.StringIO()
+# sys.stderr = BUFFER
+# sys.stdout = BUFFER
 
 class Point2Bot:
     """Gui for scraping agents and contacting them through contact form"""
@@ -233,7 +241,8 @@ class Point2Bot:
                             text="Select Emails File", 
                             bg="#b41e25", 
                             fg="white", 
-                            font="Verdana 12 bold",
+                            font="Verdana 15", 
+                            borderwidth=0,
                             command=self.__select_email)
         emails_btn.place(relx=0.21, rely=0.347, relheight=0.05, relwidth=0.3)
 
@@ -550,5 +559,10 @@ class Point2Bot:
         self.__create_home_window()
         self.window.mainloop()
 
-app = Point2Bot()
-app.run()
+if __name__ == "__main__": 
+    if not pyuac.isUserAdmin():
+        pyuac.runAsAdmin()
+        sys.exit()
+    else:
+        app = Point2Bot()
+        app.run()

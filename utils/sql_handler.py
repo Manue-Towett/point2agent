@@ -245,3 +245,4 @@ class User:
             return users
         else:
             self.logger.info(f"No users found")
+            return []
