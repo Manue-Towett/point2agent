@@ -1,6 +1,6 @@
 import os
-import datetime
 from typing import Optional
+from datetime import datetime
 
 from sqlalchemy import (
     Column, 
@@ -27,8 +27,6 @@ class SQLHandler:
 
     def __init__(self) -> None:
         file_path = os.path.abspath(os.getcwd())+"/data/agents.db"
-
-        self.date_ = datetime.date.today()
 
         self.engine = create_engine('sqlite:///'+file_path, future=True)
 
@@ -57,6 +55,8 @@ class SQLHandler:
             Column("facebook", String),
             Column("description", String),
             Column("date_scraped", DateTime),
+            Column("email_used", String),
+            Column("phone_used", String),
             Column("contacted", Boolean)
         )
 
@@ -82,6 +82,8 @@ class SQLHandler:
                     facebook = agent.facebook,
                     description = agent.description,
                     date_scraped = agent.date_scraped,
+                    email_used = agent.email_used,
+                    phone_used = agent.phone_used,
                     contacted = agent.contacted
                 )
             )
@@ -155,14 +157,16 @@ class SQLHandler:
     def run(self, agent_details: dict[str, str], update: Optional[bool] = False) -> None:
         """Generates an agent and adds to database"""
         if not update:
-            agent_details.update({"date_scraped": self.date_, "contacted": False})
+            agent_details.update({"contacted": False})
 
             agent = Agent(**agent_details)
 
             self.add_agent(agent)
         else:
             with self.engine.connect() as connection:
-                connection.execute(self.table.update().values(contacted = True).\
+                connection.execute(self.table.update().values(contacted = True, 
+                                                              email_used = agent_details["email_used"],
+                                                              phone_used = agent_details["phone_used"]).\
                                    where(self.table.c.agent_id == agent_details["agent_id"]))
                 
                 connection.commit()
@@ -196,7 +200,8 @@ class User:
             Column("api_key", String),
             Column("email", String),
             Column("subject", String),
-            Column("message", String)
+            Column("message", String),
+            Column("zyte_key", String)
         )
 
         meta.create_all(self.engine)
@@ -214,7 +219,8 @@ class User:
                     api_key=data["api_key"],
                     email=data["email"],
                     subject=data["subject"],
-                    message=data["message"]
+                    message=data["message"],
+                    zyte_key=data["zyte_key"]
                 )
             )
 

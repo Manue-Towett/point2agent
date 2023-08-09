@@ -27,10 +27,10 @@ HEADERS = {
     "X-Requested-With": "XMLHttpRequest"
 }
 
-PROXIES = {
-    "http": "http://77838c23371147dbb9fd5a0df1f04394:@proxy.crawlera.com:8011/",
-    "https": "http://77838c23371147dbb9fd5a0df1f04394:@proxy.crawlera.com:8011/"
-}
+# PROXIES = {
+#     "http": "http://77838c23371147dbb9fd5a0df1f04394:@proxy.crawlera.com:8011/",
+#     "https": "http://77838c23371147dbb9fd5a0df1f04394:@proxy.crawlera.com:8011/"
+# }
 
 class AgentsScraper:
     """Scrapes agents from https://www.point2homes.com"""
@@ -44,6 +44,7 @@ class AgentsScraper:
                  log: Text,
                  df: pd.DataFrame,
                  emails: list[str], 
+                 zyte_key: str,
                  close_event: threading.Event) -> None:
         self.logger = Logger(__class__.__name__)
         self.logger.info("*****Point2Agent Bot Started*****")
@@ -54,6 +55,7 @@ class AgentsScraper:
         self.emails = emails
         self.links_var = links
         self.agents_var = agents
+        self.zyte_key = zyte_key
         self.records_var = records
         self.close_event = close_event
 
@@ -68,11 +70,17 @@ class AgentsScraper:
         self.queued = []
         self.contacted = []
 
+        self.proxies = self.__get_proxies()
         self.agents_contacted = self.sql_handler.fetch_agent_ids()
 
         self.records_num = self.records_var.get()
 
         self.base_url = "https://www.point2homes.com"
+    
+    def __get_proxies(self) -> dict[str, str]:
+        """Generates zyte proxies"""
+        return {"http": f"http://{self.zyte_key}:@proxy.crawlera.com:8011/",
+                "https": f"http://{self.zyte_key}:@proxy.crawlera.com:8011/"}
 
     def __request_html(self, 
                        url: str, 
@@ -80,7 +88,7 @@ class AgentsScraper:
         """Makes an http request to https://www.point2homes.com"""
         for _ in range(4):
             try:
-                response = requests.get(url, headers=headers, proxies=PROXIES, verify=False, timeout=5)
+                response = requests.get(url, headers=headers, proxies=self.proxies, verify=False, timeout=5)
 
                 if response.ok:
                     return response
@@ -182,7 +190,7 @@ class AgentsScraper:
                 if url in self.agents_contacted:
                     return None
                 
-                response = self.session.post(url, params=details, headers=headers, proxies=PROXIES, verify=False)
+                response = self.session.post(url, params=details, headers=headers, proxies=self.proxies, verify=False)
 
                 if response.ok:
                     self.logger.info("Agent contacted successfully.")
@@ -245,7 +253,7 @@ class AgentsScraper:
 
         while not self.close_event.is_set():
             try:
-                response = self.session.get(url, headers=HEADERS, proxies=PROXIES, verify=False)
+                response = self.session.get(url, headers=HEADERS, proxies=self.proxies, verify=False)
 
                 if self.close_event.is_set():return
 
@@ -274,6 +282,8 @@ class AgentsScraper:
                     self.text_log.delete("1.0", END)
 
                     self.text_log.insert("1.0", self.df)
+
+                    agent.update({"email_used": "", "phone_used": ""})
 
                     self.sql_handler.run(agent)
 
@@ -316,6 +326,9 @@ class AgentsScraper:
                         return None
 
                     if response["StatusMessage"] == "Your inquiry has been sent!":
+                        agent["email_used"] = details["FromEmail"]
+                        agent["phone_used"] = details["FromPhone"]
+
                         self.agents_no += 1
 
                         self.agents_var.set(self.agents_no)                        

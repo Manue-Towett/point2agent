@@ -1,5 +1,5 @@
 import dataclasses
-from datetime import date
+from datetime import datetime
 
 @dataclasses.dataclass
 class Agent:
@@ -14,8 +14,10 @@ class Agent:
     linkedin: str
     facebook: str
     description: str
-    date_scraped: date
+    email_used: str
+    phone_used: str
     contacted: bool
+    date_scraped: datetime = datetime.strptime(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "%Y-%m-%d %H:%M:%S")
 
     def __str__(self) -> str:
         return f"{self.agent_id} {self.name} -> {self.website}"

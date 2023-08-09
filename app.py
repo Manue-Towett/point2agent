@@ -3,12 +3,13 @@ import os
 import sys
 import sqlite3
 import threading
+import configparser
 from queue import Queue
 
 import pyuac
 import pandas as pd
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 from app import AgentsScraper
 from utils import PlaceHolder, SQLHandler, User
@@ -20,6 +21,13 @@ HEIGHT, WIDTH = 650, 800
 # BUFFER = io.StringIO()
 # sys.stderr = BUFFER
 # sys.stdout = BUFFER
+
+config = configparser.ConfigParser()
+
+with open("./settings/config.ini", "r") as file:
+    config.read_file(file)
+
+COMMAND = config.get("database", "command")
 
 class Point2Bot:
     """Gui for scraping agents and contacting them through contact form"""
@@ -175,7 +183,7 @@ class Point2Bot:
         line = Label(self.center_canvas, bg="#0057ff")
         line.place(relheight=0.005, relwidth=0.98, rely=0.1, relx=0.01)
 
-        global first_name, last_name, emails_label, subject, message, api_key
+        global first_name, last_name, emails_label, subject, message, api_key, zyte_key
 
         first_name = self.input_fields_setup(
                     self.center_canvas, {
@@ -229,10 +237,30 @@ class Point2Bot:
                         "entry": {
                             "relx": 0.21, 
                             "rely": 0.2447,
-                            "relwidth": 0.72,
+                            "relwidth": 0.28,
                             "relheight": 0.07
                         },
                         "placeholder": "2captcha API Key"
+                    },
+                    True
+                )
+        
+        zyte_key = self.input_fields_setup(
+                    self.center_canvas, {
+                        "text":"Zyte API:",
+                        "label": {
+                            "relx": 0.45,
+                            "rely": 0.235,
+                            "relheight": 0.1,
+                            "relwidth": 0.24
+                        },
+                        "entry": {
+                            "relx": 0.65, 
+                            "rely": 0.2447,
+                            "relwidth": 0.28,
+                            "relheight": 0.07
+                        },
+                        "placeholder": "Zyte API Key"
                     },
                     True
                 )
@@ -338,6 +366,13 @@ class Point2Bot:
 
             return
         
+        zytekey = zyte_key.get()
+
+        if not zytekey.strip() or zytekey == "Zyte API Key":
+            error.set("Enter your Zyte api key!")
+
+            return
+        
         try:
             with open(emails_file, "r") as file:
                 emails = file.read()
@@ -369,7 +404,10 @@ class Point2Bot:
                             "email": emails,
                             "api_key": apikey,
                             "subject": subject_str,
-                            "message": message_str})
+                            "message": message_str,
+                            "zyte_key": zytekey})
+        
+        messagebox.showinfo("Success", "Settings updated!")
 
     def __create_home_window(self) -> None:
         """Creates home window"""
@@ -548,7 +586,9 @@ class Point2Bot:
             
             api_key, emails = user[3], user[4].split("\n")
 
-            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, emails, CLOSE_EVENT)
+            zyte_key = user[7]
+
+            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, emails, zyte_key, CLOSE_EVENT)
 
             threading.Thread(target=agent_scraper.scrape, daemon=True, args=(url, api_key, details)).start()
         
@@ -556,6 +596,7 @@ class Point2Bot:
             error_start.set("Please configure settings first!")
 
     def run(self) -> None:
+        """Entry point to the bot"""
         self.__create_home_window()
         self.window.mainloop()
 
@@ -564,5 +605,18 @@ if __name__ == "__main__":
         pyuac.runAsAdmin()
         sys.exit()
     else:
+        if COMMAND == "DELETE":
+            try:
+                os.remove("./data/agents.db")
+
+                config = configparser.ConfigParser()
+
+                config["database"] = {"command": "MAINTAIN"}
+
+                with open("./settings/config.ini", "w") as file:
+                    config.write(file)
+
+            except Exception as e: print(e)
+
         app = Point2Bot()
         app.run()
