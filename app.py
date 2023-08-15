@@ -60,17 +60,23 @@ class Point2Bot:
 
         self.__create_side_bar()
 
-        self.__create_center_canvas()
-
         self.user = User()
         self.sql =SQLHandler()
         self.queue = Queue()
 
         self.scrapper_running = False
 
-    def __create_center_canvas(self) -> None:
         self.center_canvas = Canvas(self.window, bg="white", borderwidth=0, highlightthickness=0)
         self.center_canvas.place(relheight=0.99, relwidth=0.823, relx=0.174, rely=0.005)
+
+        self.home_frame = Frame(self.center_canvas, bg="white")
+        self.settings_frame = Frame(self.center_canvas, bg="white")
+
+        self.home_placed = False
+        self.settings_placed = False
+
+        self.home_initialized = False
+        self.settings_initialized = False
     
     def input_fields_setup(self, frame: Frame, input_dict: dict, reveal: bool) -> Entry:
         """
@@ -126,7 +132,7 @@ class Point2Bot:
                               bg="white", 
                               borderwidth=0, 
                               foreground="#b41e25",
-                              command=self.__create_home_window)
+                              command=self.__place_home)
         home_button.place(relx=0, rely=0.1, relwidth=0.998, relheight=0.1)
 
         home_button.bind("<Enter>", on_enter)
@@ -147,7 +153,7 @@ class Point2Bot:
                               bg="white", 
                               borderwidth=0, 
                               foreground="#b41e25",
-                              command=self.__create_settings_window)
+                              command=self.__configure)
         settings_button.place(relx=0, rely=0.201, relwidth=0.998, relheight=0.1)
 
         settings_button.bind("<Enter>", on_enter_set)
@@ -155,6 +161,40 @@ class Point2Bot:
 
         line = Label(self.sidebar_canvas, bg="#b41e25")
         line.place(relheight=0.001, relwidth=0.98, rely=0.301, relx=0.01)
+    
+    def __configure(self) -> None:
+        """Configures settings window"""
+        if self.home_placed:
+            self.home_frame.place_forget()
+
+            self.home_placed = False
+        
+        if not self.settings_placed:
+            self.settings_frame.place(relheight=1, relwidth=1)
+            
+            if not self.settings_initialized:
+                self.__create_settings_window()
+
+                self.settings_initialized = True
+            
+            self.settings_placed = True
+    
+    def __place_home(self) -> None:
+        """Configures settings window"""
+        if self.settings_placed:
+            self.settings_frame.place_forget()
+
+            self.settings_placed = False
+        
+        if not self.home_placed:
+            self.home_frame.place(relheight=1, relwidth=1)
+            
+            if not self.home_initialized:
+                self.__create_home_window()
+
+                self.home_initialized = True
+            
+            self.home_placed = True
 
     def __create_logger(self) -> None:
         """Creates the logger for agent links extracted and agents contacted"""
@@ -186,16 +226,12 @@ class Point2Bot:
     
     def __create_settings_window(self) -> None:
         """Creates the settings window"""
-        self.center_canvas.destroy()
-
-        self.__create_center_canvas()
-
         text = "The following are the required fields for the bot to contact agents:"
 
-        label = Label(self.center_canvas, text=text, fg="#0057ff", bg="white", font="Verdana 18 bold", anchor=W)
+        label = Label(self.settings_frame, text=text, fg="#0057ff", bg="white", font="Verdana 18 bold", anchor=W)
         label.place(relheight=0.1, relwidth=0.99, relx=0.05)
 
-        line = Label(self.center_canvas, bg="#0057ff")
+        line = Label(self.settings_frame, bg="#0057ff")
         line.place(relheight=0.005, relwidth=0.98, rely=0.1, relx=0.01)
 
         users = self.user.fetch_users()
@@ -225,7 +261,7 @@ class Point2Bot:
         global first_name, last_name, emails_label, subject, message, api_key, zyte_key
 
         first_name = self.input_fields_setup(
-                    self.center_canvas, {
+                    self.settings_frame, {
                         "text":"First Name:",
                         "label": {
                             "relx": 0,
@@ -245,7 +281,7 @@ class Point2Bot:
                 )
         
         last_name = self.input_fields_setup(
-                    self.center_canvas, {
+                    self.settings_frame, {
                         "text":"Last Name:",
                         "label": {
                             "relx": 0.45,
@@ -265,7 +301,7 @@ class Point2Bot:
                 )
         
         api_key = self.input_fields_setup(
-                    self.center_canvas, {
+                    self.settings_frame, {
                         "text":"2captcha Key:",
                         "label": {
                             "relx": 0,
@@ -285,7 +321,7 @@ class Point2Bot:
                 )
         
         zyte_key = self.input_fields_setup(
-                    self.center_canvas, {
+                    self.settings_frame, {
                         "text":"Zyte API:",
                         "label": {
                             "relx": 0.45,
@@ -304,7 +340,7 @@ class Point2Bot:
                     True
                 )
         
-        emails_btn = Button(self.center_canvas, 
+        emails_btn = Button(self.settings_frame, 
                             text="Select Emails File", 
                             bg="#b41e25", 
                             fg="white", 
@@ -317,12 +353,12 @@ class Point2Bot:
             label_size = e.width/23
             label.config(font=("Verdana", int(label_size)))
 
-        emails_label = Label(self.center_canvas, text=file_name, bg="white", font="Verdana 12", anchor=W)
+        emails_label = Label(self.settings_frame, text=file_name, bg="white", font="Verdana 12", anchor=W)
         emails_label.place(relx=0.52, rely=0.345, relheight=0.05, relwidth=0.41)
         emails_label.bind("<Configure>", resize_emails)
         
         subject = self.input_fields_setup(
-                    self.center_canvas, {
+                    self.settings_frame, {
                         "text":"Email Subject:",
                         "label": {
                             "relx": 0,
@@ -345,18 +381,18 @@ class Point2Bot:
             label_size = e.width/23
             label.config(font=("Verdana", int(label_size)))
 
-        label = Label(self.center_canvas, text="Message:", bg="white", font=("Verdana", 18))
+        label = Label(self.settings_frame, text="Message:", bg="white", font=("Verdana", 18))
         label.place(relheight=0.1, relwidth=0.24, relx=0, rely=0.535)
         label.bind('<Configure>', resize)
 
-        message = Text(self.center_canvas, bg="#f2f2f2", highlightthickness=0, borderwidth=0, padx=15, pady=15, font="Verdana 12")
+        message = Text(self.settings_frame, bg="#f2f2f2", highlightthickness=0, borderwidth=0, padx=15, pady=15, font="Verdana 12")
         message.place(relx=0.21, rely=0.5447, relheight=0.25, relwidth=0.72)
 
         message.insert("1.0", user_settings["message"])
 
         global save_button
         
-        save_button = Button(self.center_canvas, 
+        save_button = Button(self.settings_frame, 
                               text="Save Entries", 
                               font=("Verdana", 15), 
                               bg="#b41e25", 
@@ -371,8 +407,10 @@ class Point2Bot:
 
         error.set("")
 
-        error_label = Label(self.center_canvas, textvariable=error, bg="white", fg="red", font="Verdana 12")
+        error_label = Label(self.settings_frame, textvariable=error, bg="white", fg="red", font="Verdana 12")
         error_label.place(relx=0.21, rely=0.88, relheight=0.07, relwidth=0.72)
+
+        self.settings_initialized = True
     
     def __select_email(self) -> None:
         """Select emails file"""
@@ -468,10 +506,8 @@ class Point2Bot:
         messagebox.showinfo("Success", "Settings updated!")
 
     def __create_home_window(self) -> None:
-        """Creates home window"""
-        self.center_canvas.destroy()
-
-        self.__create_center_canvas()
+        """Creates home window"""        
+        self.home_frame.place(relheight=1, relwidth=1)
 
         text = "First, configure settings, then enter start url and click start button"
 
@@ -480,19 +516,19 @@ class Point2Bot:
         error_start = StringVar()
         error_start.set("")
 
-        error_label = Label(self.center_canvas, textvariable=error_start, bg="white", fg="red", font="Verdana 12")
+        error_label = Label(self.home_frame, textvariable=error_start, bg="white", fg="red", font="Verdana 12")
         error_label.place(relheight=0.07, relwidth=0.75, relx=0.05, rely=0.945)
 
-        label = Label(self.center_canvas, text=text, fg="#0057ff", bg="white", font="Verdana 18 bold", anchor=W)
+        label = Label(self.home_frame, text=text, fg="#0057ff", bg="white", font="Verdana 18 bold", anchor=W)
         label.place(relheight=0.1, relwidth=0.99, relx=0.05)
 
-        line = Label(self.center_canvas, bg="#0057ff")
+        line = Label(self.home_frame, bg="#0057ff")
         line.place(relheight=0.005, relwidth=0.98, rely=0.1, relx=0.01)
 
-        start_url = PlaceHolder(self.center_canvas, "Enter the start url for the scraper...", font="Verdana 12")
+        start_url = PlaceHolder(self.home_frame, "Enter the start url for the scraper...", font="Verdana 12")
         start_url.place(relheight=0.055, relwidth=0.7, relx=0.05, rely=0.125)
 
-        start_button = Button(self.center_canvas, 
+        start_button = Button(self.home_frame, 
                               text="Start", 
                               font=("Verdana", 15), 
                               bg="#b41e25", 
@@ -501,7 +537,7 @@ class Point2Bot:
                               command=self.__start)
         start_button.place(relx=0.75, rely=0.125, relwidth=0.2, relheight=0.055)
 
-        logs_frame = Frame(self.center_canvas, bg="#f2f2f2", borderwidth=0, highlightthickness=0)
+        logs_frame = Frame(self.home_frame, bg="#f2f2f2", borderwidth=0, highlightthickness=0)
         logs_frame.place(relheight=0.755, relwidth=0.9, relx=0.05, rely=0.2)
 
         scroll_y = Scrollbar(logs_frame, orient="vertical")
@@ -568,6 +604,8 @@ class Point2Bot:
                               foreground="white",
                               command=self.__delete)
         delete_button.place(relx=0.726, rely=0.926, relwidth=0.2, relheight=0.05)
+
+        self.home_initialized = True
     
     @staticmethod
     def __validate_2captcha(key: str) -> Optional[str]:
