@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\Towett\Desktop\point2agent\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Towett\Desktop\point2agent\data\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Towett\Desktop\point2agent\include\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\Towett\Desktop\point2agent\p2c.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\Towett\Desktop\point2agent\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\Towett\Desktop\point2agent\README.md"; DestDir: "{app}"; Flags: ignoreversion

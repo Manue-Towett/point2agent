@@ -1,12 +1,15 @@
 import io
 import os
 import sys
+import json
 import sqlite3
 import threading
 import configparser
 from queue import Queue
+from typing import Optional
 
 import pyuac
+import requests
 import pandas as pd
 from tkinter import *
 from tkinter import filedialog, messagebox
@@ -18,9 +21,21 @@ CLOSE_EVENT = threading.Event()
 
 HEIGHT, WIDTH = 650, 800
 
-# BUFFER = io.StringIO()
-# sys.stderr = BUFFER
-# sys.stdout = BUFFER
+BUFFER = io.StringIO()
+sys.stderr = BUFFER
+sys.stdout = BUFFER
+
+HEADERS = {
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Dnt": "1",
+    "Origin": "https://www.point2homes.com",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+    "X-Requested-With": "XMLHttpRequest"
+}
 
 config = configparser.ConfigParser()
 
@@ -183,6 +198,30 @@ class Point2Bot:
         line = Label(self.center_canvas, bg="#0057ff")
         line.place(relheight=0.005, relwidth=0.98, rely=0.1, relx=0.01)
 
+        users = self.user.fetch_users()
+
+        file_name = ""
+
+        user_settings = {"f_name": "First Name",
+                         "l_name": "Surname", 
+                         "2captcha": "2captcha API Key",
+                         "zyte_key": "Zyte API Key",
+                         "subject": "Email subject", 
+                         "message": ""}
+
+        if len(users):
+            user = users[0]
+
+            user_settings.update({"f_name": user[1],
+                                  "l_name": user[2],
+                                  "2captcha": user[3],
+                                  "zyte_key": user[7],
+                                  "subject": user[5],
+                                  "message": user[6]})
+            
+            with open("./settings/settings.json", "r") as file:
+                file_name = json.load(file)["path"].split("/")[-1]
+
         global first_name, last_name, emails_label, subject, message, api_key, zyte_key
 
         first_name = self.input_fields_setup(
@@ -200,7 +239,7 @@ class Point2Bot:
                             "relwidth": 0.28,
                             "relheight": 0.07
                         },
-                        "placeholder": "First Name"
+                        "placeholder": user_settings["f_name"]
                     },
                     True
                 )
@@ -220,7 +259,7 @@ class Point2Bot:
                             "relwidth": 0.28,
                             "relheight": 0.07
                         },
-                        "placeholder": "Surname"
+                        "placeholder": user_settings["l_name"]
                     },
                     True
                 )
@@ -240,7 +279,7 @@ class Point2Bot:
                             "relwidth": 0.28,
                             "relheight": 0.07
                         },
-                        "placeholder": "2captcha API Key"
+                        "placeholder": user_settings["2captcha"]
                     },
                     True
                 )
@@ -260,7 +299,7 @@ class Point2Bot:
                             "relwidth": 0.28,
                             "relheight": 0.07
                         },
-                        "placeholder": "Zyte API Key"
+                        "placeholder": user_settings["zyte_key"]
                     },
                     True
                 )
@@ -278,7 +317,7 @@ class Point2Bot:
             label_size = e.width/23
             label.config(font=("Verdana", int(label_size)))
 
-        emails_label = Label(self.center_canvas, text="", bg="white", font="Verdana 12", anchor=W)
+        emails_label = Label(self.center_canvas, text=file_name, bg="white", font="Verdana 12", anchor=W)
         emails_label.place(relx=0.52, rely=0.345, relheight=0.05, relwidth=0.41)
         emails_label.bind("<Configure>", resize_emails)
         
@@ -297,7 +336,7 @@ class Point2Bot:
                             "relwidth": 0.72,
                             "relheight": 0.07
                         },
-                        "placeholder": "Email subject"
+                        "placeholder": user_settings["subject"]
                     },
                     True
                 )
@@ -312,6 +351,8 @@ class Point2Bot:
 
         message = Text(self.center_canvas, bg="#f2f2f2", highlightthickness=0, borderwidth=0, padx=15, pady=15, font="Verdana 12")
         message.place(relx=0.21, rely=0.5447, relheight=0.25, relwidth=0.72)
+
+        message.insert("1.0", user_settings["message"])
 
         global save_button
         
@@ -366,10 +407,24 @@ class Point2Bot:
 
             return
         
+        key_err = self.__validate_2captcha(apikey.strip())
+
+        if key_err is not None:
+            error.set("2captcha key failed validation!")
+
+            return
+        
         zytekey = zyte_key.get()
 
         if not zytekey.strip() or zytekey == "Zyte API Key":
             error.set("Enter your Zyte api key!")
+
+            return
+        
+        zyte_response = self.__validate_zyte_key(zytekey.strip())
+
+        if zyte_response is None:
+            error.set("Zyte API key validation failed!")
 
             return
         
@@ -394,6 +449,9 @@ class Point2Bot:
             error.set("Please enter the message to be sent to agent!")
 
             return
+        
+        with open("./settings/settings.json", "w") as file:
+            json.dump({"path": emails_file}, file, indent=4)
         
         error.set("")
 
@@ -511,6 +569,49 @@ class Point2Bot:
                               command=self.__delete)
         delete_button.place(relx=0.726, rely=0.926, relwidth=0.2, relheight=0.05)
     
+    @staticmethod
+    def __validate_2captcha(key: str) -> Optional[str]:
+        """validates the 2captcha key"""
+        payload = {
+            "key": key,
+            "method": "userrecaptcha",
+            "googlekey": "6Lcb0qgUAAAAANN6pnNcFLa1kcrUSICT6FR8PTOe",
+            "json": 1,
+            # "cookies": "cookies",
+            "pageurl": "https://www.point2homes.com/MX/Real-Estate-Agents/Karina-Sayed/521081.html"
+        }
+
+        while True:
+            try:
+                response = requests.post("http://2captcha.com/in.php", data=payload)
+
+                if response.ok:
+                    data = response.json()
+
+                    break
+
+            except: pass
+
+        if data["request"].startswith("ERROR"): 
+            return data["request"]
+    
+    @staticmethod
+    def __validate_zyte_key(key: str) -> Optional[bool]:
+        """Validates zyte api key"""
+        url = "https://www.point2homes.com/MX/Real-Estate-Listings/Quintana-Roo/Playa-del-Carmen.html"
+
+        proxies = {"http": f"http://{key}:@proxy.crawlera.com:8011/",
+                   "https": f"http://{key}:@proxy.crawlera.com:8011/"}
+        
+        for _ in range(4):
+            try:
+                response = requests.get(url, headers=HEADERS, proxies=proxies, verify=False, timeout=5)
+
+                if response.ok:
+                    return True
+                
+            except:pass
+    
     def __export(self) -> None:
         """Exports data to csv"""
         directory = filedialog.asksaveasfilename(defaultextension="xlsx", 
@@ -584,13 +685,13 @@ class Point2Bot:
                 "Message": user[6]
             }
             
-            api_key, emails = user[3], user[4].split("\n")
+            apikey, emails = user[3], user[4].split("\n")
 
-            zyte_key = user[7]
+            zytekey = user[7]
 
-            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, emails, zyte_key, CLOSE_EVENT)
+            agent_scraper = AgentsScraper(links, agents, records, state, logs_textbox, self.df, emails, zytekey, CLOSE_EVENT)
 
-            threading.Thread(target=agent_scraper.scrape, daemon=True, args=(url, api_key, details)).start()
+            threading.Thread(target=agent_scraper.scrape, daemon=True, args=(url, apikey, details)).start()
         
         else:
             error_start.set("Please configure settings first!")
